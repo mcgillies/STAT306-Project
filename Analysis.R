@@ -6,6 +6,7 @@ library(Hmisc)
 library(tidyverse)
 library(corrplot)
 library(regclass)
+library(ppcor)
 # Reading in data
 bot_data <- read_csv("activity_botscore.csv")
 
@@ -24,6 +25,12 @@ corrplot(all_correlations)
 ## We can see a very large negative correlation between user_id and age and a
 ## very large correlation between activity and count. Besides these all 
 ## correlations are quite minimal
+
+## Creating dataframe with only desired columns
+bot_data_filtered <- bot_data %>% select(bot_score_english, age, activity)
+
+## Looking at partial correlations
+pcor(bot_data_filtered)
 
 # Model creation
 model_noint = lm(bot_score_english~age+activity, data = bot_data)
