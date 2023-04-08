@@ -1,9 +1,11 @@
 ## Analysis
 install.packages("Hmisc")
 install.packages("corrplot")
+install.packages("regclass")
 library(Hmisc)
 library(tidyverse)
 library(corrplot)
+library(regclass)
 # Reading in data
 bot_data <- read_csv("activity_botscore.csv")
 
@@ -28,3 +30,12 @@ model_noint = lm(bot_score_english~age+activity, data = bot_data)
 model_int = lm(bot_score_english~age+activity+age*activity, data = bot_data)
 summary(model_noint)
 summary(model_int)
+
+# Checking VIF for each model 
+VIF(model_noint)
+## Variables both have approximately 1 VIF, indicating low multicollinearity 
+## and that the variables are not correlated strongly
+VIF(model_int)
+## Activity and the interaction term now have high VIF, indicating high 
+## multicollinearity between these terms. Therefore the correlation is quite
+## high between these variables, which can skew the model results. 
