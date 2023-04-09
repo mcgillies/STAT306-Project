@@ -48,6 +48,7 @@ VIF(model_int)
 ## high between these variables, which can skew the model results. 
 
 
+
 # Plotting residuals plot and qqplot for each model
 plot(model_noint)
 # Residual plot shows a random scatter with no apparent pattern, indicating
@@ -57,3 +58,8 @@ plot(model_int)
 # Likewise, the residual plot seems to bare no apparent pattern indicating
 # a linear model is appropriate here. The QQplot is also similar to the 
 # previous model being right-skewed.  
+
+sum <- regsubsets(bot_score_english~age+activity+age*activity, data = bot_data)
+## We can see that the interaction term is the firt term removed in the 
+## variable selection, once again indicating low correlation between age and 
+## activity. 
