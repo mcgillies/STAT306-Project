@@ -46,7 +46,14 @@ VIF(model_int)
 ## Activity and the interaction term now have high VIF, indicating high 
 ## multicollinearity between these terms. Therefore the correlation is quite
 ## high between these variables, which can skew the model results. 
-sub <- regsubsets(bot_score_english~age+activity+age*activity, data = bot_data_filtered)
-summary(sub)
-## The interaction term is the first term to be removed, once again indicating
-## a low correlation between age and activity. 
+
+
+# Plotting residuals plot and qqplot for each model
+plot(model_noint)
+# Residual plot shows a random scatter with no apparent pattern, indicating
+# a linear model is appropriate for modelling the data. QQplot is right-
+# skewed with the right half of the plot being above the qqline.
+plot(model_int)
+# Likewise, the residual plot seems to bare no apparent pattern indicating
+# a linear model is appropriate here. The QQplot is also similar to the 
+# previous model being right-skewed.  
