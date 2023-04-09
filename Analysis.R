@@ -7,6 +7,7 @@ library(tidyverse)
 library(corrplot)
 library(regclass)
 library(ppcor)
+library(leaps)
 # Reading in data
 bot_data <- read_csv("activity_botscore.csv")
 
@@ -48,7 +49,6 @@ VIF(model_int)
 ## high between these variables, which can skew the model results. 
 
 
-
 # Plotting residuals plot and qqplot for each model
 plot(model_noint)
 # Residual plot shows a random scatter with no apparent pattern, indicating
@@ -63,3 +63,30 @@ sum <- regsubsets(bot_score_english~age+activity+age*activity, data = bot_data)
 ## We can see that the interaction term is the firt term removed in the 
 ## variable selection, once again indicating low correlation between age and 
 ## activity. 
+
+# Training and test sets
+set.seed(1)
+sample <- sample(c(TRUE, FALSE), nrow(bot_data), replace = TRUE, prob = c(0.7,0.3))
+train <- bot_data[sample,]
+test <- bot_data[!sample,]
+# View dimensions of training set and test set
+dim(train)
+dim(test)
+# Fit linear regression model to training set
+model_train_int <- lm(bot_score_english ~ age + activity + age*activity, data = train)
+summary(model_train_int)
+# Predicted values for test set
+pred1 <- predict(model_train_int, test)
+rmse_int <- sqrt(mean(pred1 - test$bot_score_english)^2)
+rmse_int
+# We get a value of 0.007165366
+
+# Same procedure with no interaction model
+model_train_noint <- lm(bot_score_english ~ age + activity, data = train)
+summary(model_train_int)
+pred2 <- predict(model_train_noint, test)
+rmse_noint <- sqrt(mean(pred2 - test$bot_score_english)^2)
+rmse_noint
+# We get a value of 0.007329812
+# We see that the model including the interaction term results in a lower RMSE therefore
+# suggesting that it is perhaps a better model
