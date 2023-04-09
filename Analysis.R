@@ -27,7 +27,7 @@ corrplot(all_correlations)
 ## correlations are quite minimal
 
 ## Creating dataframe with only desired columns
-bot_data_filtered <- bot_data %>% select(bot_score_english, age, activity)
+bot_data_filtered <- bot_data %>% dplyr::select(bot_score_english, age, activity)
 
 ## Looking at partial correlations
 pcor(bot_data_filtered)
@@ -35,8 +35,8 @@ pcor(bot_data_filtered)
 # Model creation
 model_noint = lm(bot_score_english~age+activity, data = bot_data)
 model_int = lm(bot_score_english~age+activity+age*activity, data = bot_data)
-summary(model_noint)
-summary(model_int)
+summary(model_noint, conf.int = TRUE)
+summary(model_int, conf.int=TRUE)
 
 # Checking VIF for each model 
 VIF(model_noint)
@@ -46,3 +46,7 @@ VIF(model_int)
 ## Activity and the interaction term now have high VIF, indicating high 
 ## multicollinearity between these terms. Therefore the correlation is quite
 ## high between these variables, which can skew the model results. 
+sub <- regsubsets(bot_score_english~age+activity+age*activity, data = bot_data_filtered)
+summary(sub)
+## The interaction term is the first term to be removed, once again indicating
+## a low correlation between age and activity. 
