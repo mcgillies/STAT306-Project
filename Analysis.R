@@ -62,6 +62,17 @@ plot(model_int)
 # a linear model is appropriate here. The QQplot is also similar to the 
 # previous model being right-skewed.  
 
+## Creating model with log(bot_score_english) to attempt to find a better fit
+mod_log_noint <- lm(log(bot_score_english) ~ age + activity, data = bot_data)
+mod_log_int <- lm(log(bot_score_english) ~ age + activity + age*activity, data = bot_data)
+summary(mod_log_noint)
+summary(mod_log_int)
+
+## Viewing residual plots and QQ plots for log models:
+plot(mod_log_int)
+plot(mod_log_noint)
+
+
 sum <- regsubsets(bot_score_english~age+activity+age*activity, data = bot_data)
 ## We can see that the interaction term is the firt term removed in the 
 ## variable selection, once again indicating low correlation between age and 
